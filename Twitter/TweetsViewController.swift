@@ -8,18 +8,31 @@
 
 import UIKit
 
-class TweetsViewController: UIViewController {
+class TweetsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     var tweets: [Tweet]?
     var user: User?
+    var refreshControl: UIRefreshControl!
+    
+    @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        tableView.dataSource = self
+        tableView.delegate = self
+        //self.navigationController?.navigationBar.barTintColor = UIColor.blueColor()
+        
+        
         // Do any additional setup after loading the view.
         TwitterClient.sharedInstance.homeTimeLineWithParams(nil, completion: { (tweets, error) -> () in
             self.tweets = tweets
+            println(self.tweets)
+            self.tableView.reloadData()
         })
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        self.refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
+        self.tableView.addSubview(refreshControl)
     }
 
     override func didReceiveMemoryWarning() {
@@ -27,11 +40,28 @@ class TweetsViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
     @IBAction func onLogout(sender: AnyObject) {
         User.currentUser?.logout()
     }
+
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.tweets?.count ?? 0
+    }
     
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        var cell = tableView.dequeueReusableCellWithIdentifier("TweetCell") as TweetCell
+        var tweet = self.tweets?[indexPath.row]
+        cell.tweet = tweet
+        return cell
+    }
+    
+    func refresh(refreshControl: UIRefreshControl) {
+        TwitterClient.sharedInstance.homeTimeLineWithParams(nil, completion:{ (tweets, error) -> () in
+            self.tweets = tweets
+            self.tableView.reloadData()
+            self.refreshControl.endRefreshing()
+        })
+    }
     /*
     // MARK: - Navigation
 
@@ -41,5 +71,12 @@ class TweetsViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.identifier == "segueTweetDetail") {
+            var cell = sender as TweetCell
+            var detailViewController = segue.destinationViewController as TweetDetailViewController
+            detailViewController.tweet = cell.tweet
+        }
+    }
 }

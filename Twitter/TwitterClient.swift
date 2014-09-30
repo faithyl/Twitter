@@ -72,5 +72,20 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
             self.loginCompletion? (user: nil, error: error)
         }
     }
+    
+    func sendGetRequest(endpoint: String, parameters: [String: String]!, callback: (response: AnyObject!, error: NSError!) -> Void) {
+        GET(endpoint,
+            parameters: parameters,
+            success: {
+                // Success
+                (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+                callback(response: response, error: nil)
+            },
+            failure: {
+                // Failure
+                (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+                callback(response: nil, error: error)
+        })
+    }
    
 }
