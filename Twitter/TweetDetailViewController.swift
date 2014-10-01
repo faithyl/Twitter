@@ -23,8 +23,7 @@ class TweetDetailViewController: UIViewController {
         // Do any additional setup after loading the view.
         profileImage.setImageWithURL(NSURL(string: tweet!.user!.profileImageUrl!))
         userLabel.text = tweet!.user!.name
-        var screenname = tweet!.user!.screenname as String!
-        screennameLabel.text = "@\(screenname)"
+        screennameLabel.text = "@\(tweet!.user!.screenname!)"
         tweetLabel.text = tweet?.text
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "MM/dd, h:mm a"

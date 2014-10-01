@@ -87,5 +87,24 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
                 callback(response: nil, error: error)
         })
     }
-   
+    
+    func sendPostRequest(endpoint: String, parameters: [String: String]!, callback: (error: NSError!) -> Void) {
+        POST(endpoint,
+            parameters: parameters,
+            success: {
+                // Success
+                (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+                callback(error: nil)
+            },
+            failure: {
+                // Failure
+                (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+                callback(error: error)
+        })
+    }
+    func tweet(status: String, callback: (error: NSError!) -> Void) {
+        sendPostRequest("statuses/update.json",
+            parameters: [ "status": status ],
+            callback: callback)
+    }
 }

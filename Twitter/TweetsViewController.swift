@@ -20,13 +20,13 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.estimatedRowHeight = 85
         //self.navigationController?.navigationBar.barTintColor = UIColor.blueColor()
         
         
         // Do any additional setup after loading the view.
         TwitterClient.sharedInstance.homeTimeLineWithParams(nil, completion: { (tweets, error) -> () in
             self.tweets = tweets
-            println(self.tweets)
             self.tableView.reloadData()
         })
         self.refreshControl = UIRefreshControl()
@@ -77,6 +77,8 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
             var cell = sender as TweetCell
             var detailViewController = segue.destinationViewController as TweetDetailViewController
             detailViewController.tweet = cell.tweet
+        } else if (segue.identifier == "newtweetSegue") {
+            var newViewController = segue.destinationViewController as NewTweetViewController
         }
     }
 }
