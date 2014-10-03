@@ -50,8 +50,10 @@ class User: NSObject {
             if _currentUser != nil {
                 var data = NSJSONSerialization.dataWithJSONObject(user!.dictionary, options: nil, error: nil)
                 NSUserDefaults.standardUserDefaults().setObject(data, forKey: currentUserKey)
-                NSUserDefaults.standardUserDefaults().synchronize()
+            } else {
+                NSUserDefaults.standardUserDefaults().setObject(nil, forKey: currentUserKey)
             }
+            NSUserDefaults.standardUserDefaults().synchronize()
         }
     }
    

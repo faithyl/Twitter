@@ -21,6 +21,10 @@ class TweetCell: UITableViewCell {
             userLabel.text = tweet?.user?.name
             var screenname = tweet?.user?.screenname as String!
             screennameLabel.text = "@\(screenname)"
+            var tweetString = tweet?.text!
+            //var tweetMutable = NSMutableAttributedString(string: tweetString!)
+            //println(tweetMutable)
+            //tweetMutable.addAttribute(NSURLComponents, value: NSURLComponents.componentsWithString(URLString: tweetMutable), range: 30)
             tweetLabel.text = tweet?.text
             timeLabel.text = tweet?.createdAt?.prettyTimestampSinceNow()
             var profileURL = tweet?.user?.profileImageUrl as String!
